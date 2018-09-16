@@ -5,7 +5,7 @@ import timeit
 
 inicio = timeit.default_timer()
 
-distancias, qtdCidades = funcoes.calcularDistancias("A280.txt")
+distancias, qtdCidades = funcoes.calcularDistancias("att532.txt")
 # distancias, qtdCidades = funcoes.lerDados("cv10.txt")
 
 # for i in range(qtdCidades):
