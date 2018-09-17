@@ -313,3 +313,92 @@ def descida(distancias, rota_construida, qtd_cidades, fo):
 
     return melhor_rota, melhor_fo
 
+
+def descidaPrimeiraMelhora(matriz, no, soma2):
+
+    tamanho = len(no)
+    k = 1
+    j = 2
+    somanova = 0
+    contador = 0
+
+    while (k <= tamanho - 2):
+        j = 2
+        while (j <= tamanho - 2):
+
+            aux1 = no[k]
+            no[k] = no[j]
+            no[j] = aux1
+
+            somanova = 0
+            for i in range(0, tamanho - 1):
+                somanova = somanova + matriz[no[i]][no[i + 1]]
+
+            if (somanova < soma2):
+                print(no)
+                soma2 = somanova
+                print(somanova)
+                j = 2
+                k = 0
+                break
+            else:
+                aux1 = no[k]
+                no[k] = no[j]
+                no[j] = aux1
+            j = j + 1
+        k = k + 1
+
+    return no, soma2
+
+
+def aleatorio(distancias, qtdCidades, cidadeInicial):
+    cidadesVisitadas = []
+    cidadesNaoVisitadas = []
+    fo = 0
+
+    for i in range(qtdCidades):
+        cidadesNaoVisitadas.append(i)
+
+    cidadeAtual = cidadeInicial
+
+    cidadesVisitadas.append(cidadeAtual)
+    cidadesNaoVisitadas.remove(cidadeAtual)
+    while cidadesNaoVisitadas:
+
+        proximaCidade = random.choice(cidadesNaoVisitadas)
+        adistancia = distancias[cidadeAtual][proximaCidade]
+
+        fo += adistancia
+
+        cidadeAtual = proximaCidade
+        cidadesVisitadas.append(cidadeAtual)
+        cidadesNaoVisitadas.remove(cidadeAtual)
+
+    fo += distancias[cidadesVisitadas[qtdCidades - 1]][cidadeInicial]
+    cidadesVisitadas.append(cidadeInicial)
+
+    return cidadesVisitadas, fo
+
+def descidaRandomica(distancias, qtdCidades, iterMax, s, fo1): #descRandom(f(.), N(.), interMax, s)
+    #uma estrutura de vizinhança N(:), s = solucao
+    interacao = 0
+    while(interacao < iterMax):
+
+         # s' pertence N(s);
+        solucao1 = random.randrange(1,qtdCidades)
+        solucao2 = random.randrange(1, qtdCidades)
+        interacao = interacao + 1
+
+        rota_vizinha = copy.copy(s)
+        aux = rota_vizinha[solucao1]
+        rota_vizinha[solucao1] = rota_vizinha[solucao2]
+        rota_vizinha[solucao2] = aux
+
+        fo =calculaFo(distancias, rota_vizinha)
+
+        if(fo < fo1): #f(s') < f(s)
+            interacao = 0
+            s = rota_vizinha
+            fo1 = fo
+
+    return s, fo1
