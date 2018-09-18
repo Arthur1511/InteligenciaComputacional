@@ -380,6 +380,7 @@ def aleatorio(distancias, qtdCidades, cidadeInicial):
     return cidadesVisitadas, fo
 
 def descidaRandomica(distancias, qtdCidades, iterMax, s, fo1): #descRandom(f(.), N(.), interMax, s)
+
     #uma estrutura de vizinhança N(:), s = solucao
     interacao = 0
     while(interacao < iterMax):

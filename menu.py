@@ -4,7 +4,7 @@ import timeit
 print('#####################################################')
 print('####        Problema do Caixeiro Viajante        ####')
 print('#####################################################\n')
-nomeArq = ""
+
 nomeArq = input('Digite o nome do arquivo para base de dados:')
 
 distancias, qtdCidades = funcoes.calcularDistancias(nomeArq)
@@ -93,6 +93,7 @@ while True:
         print()
         print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)
         print("Tempo de execução(s):", fim - inicio)
+
     elif var == 4:
         inicio = timeit.default_timer()
         rota_refinada, fo_refinada = funcoes.descidaPrimeiraMelhora(distancias, rota, fo)
