@@ -8,7 +8,7 @@ print('#####################################################\n')
 nomeArq = input('Digite o nome do arquivo para base de dados:')
 
 distancias, qtdCidades = funcoes.calcularDistancias(nomeArq)
-
+# distancias, qtdCidades = funcoes.lerDados(nomeArq)
 rota = []
 fo = 0
 
@@ -20,6 +20,8 @@ while True:
     print("                2. Descida \n")
     print("                3. Descida randomica \n")
     print("                4. Descida com Primeiro de Melhora \n")
+    print("                5. VND \n")
+    print("                6. GRASP \n")
     print("                0. Sair \n")
     var = int(input("                Escolha: "))
 
@@ -97,6 +99,25 @@ while True:
     elif var == 4:
         inicio = timeit.default_timer()
         rota_refinada, fo_refinada = funcoes.descidaPrimeiraMelhora(distancias, rota, fo)
+        fim = timeit.default_timer()
+        print()
+        print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)
+        print("Tempo de execução(s):", fim - inicio)
+
+    elif var == 5:
+        inicio = timeit.default_timer()
+        rota_refinada, fo_refinada = funcoes.vnd(distancias, 5, rota, fo)
+        fim = timeit.default_timer()
+        print()
+        print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)
+        print("Tempo de execução(s):", fim - inicio)
+
+    elif var == 6:
+        print()
+        cidadeInicial = int(input("Insira a cidade inicial:"))
+        alpha = float(input("Insira o valor de Alfa:"))
+        inicio = timeit.default_timer()
+        rota_refinada, fo_refinada = funcoes.grasp(distancias,qtdCidades, cidadeInicial, alpha)
         fim = timeit.default_timer()
         print()
         print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)

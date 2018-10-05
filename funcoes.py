@@ -1,7 +1,7 @@
 import copy
 import random
 import numpy
-
+import math
 
 def lerDados(arquivo):
     file = open(arquivo, 'r')
@@ -379,6 +379,7 @@ def aleatorio(distancias, qtdCidades, cidadeInicial):
 
     return cidadesVisitadas, fo
 
+
 def descidaRandomica(distancias, qtdCidades, iterMax, s, fo1): #descRandom(f(.), N(.), interMax, s)
 
     #uma estrutura de vizinhança N(:), s = solucao
@@ -403,3 +404,53 @@ def descidaRandomica(distancias, qtdCidades, iterMax, s, fo1): #descRandom(f(.),
             fo1 = fo
 
     return s, fo1
+
+
+def shake(s, num_de_trocas):
+
+    for i in range(num_de_trocas):
+        troca1 = random.randrange(1, len(s))
+        troca2 = random.randrange(1, len(s))
+        aux = s[troca1]
+        s[troca1] = s[troca2]
+        s[troca2] = aux
+
+    return s
+
+
+def vnd(distancias, num_estruturas, solucao_inicial, fo):
+
+    solucao_corrente = solucao_inicial
+    fo_corrente = fo
+
+    grau_estrutura = 1
+
+    while grau_estrutura < num_estruturas:
+        vizinho = shake(solucao_corrente, grau_estrutura)
+        fo_vizinho = calculaFo(distancias, vizinho)
+
+        if fo_vizinho < fo_corrente:
+            solucao_corrente = vizinho
+            fo_corrente = fo_vizinho
+            grau_estrutura = 1
+        else:
+            grau_estrutura += 1
+
+    return solucao_corrente, fo_corrente
+
+
+def grasp(distancias, qtd_cidades, cidadeInicial, alpha):
+
+    criterio_de_parada = 10*qtd_cidades
+    melhor_fo = math.inf
+    melhor_rota = []
+    while criterio_de_parada != 0:
+        rota, fo = vizinhoMaisProximo(distancias, qtd_cidades, cidadeInicial, alpha)
+        rota, fo = descida(distancias, rota, qtd_cidades, fo)
+
+        if fo < melhor_fo:
+            melhor_fo = fo
+            melhor_rota = rota
+        criterio_de_parada -= 1
+
+    return rota, fo
