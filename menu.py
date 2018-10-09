@@ -5,10 +5,23 @@ print('#####################################################')
 print('####        Problema do Caixeiro Viajante        ####')
 print('#####################################################\n')
 
-nomeArq = input('Digite o nome do arquivo para base de dados:')
+print("\n*******************Formato de Arquivo************************* \n")
+print("                1. Arquivo de coordenadas \n")
+print("                2. Arquivo de com matriz de distancias \n")
+print("                0. Sair \n")
+var = int(input("                Escolha: "))
 
-distancias, qtdCidades = funcoes.calcularDistancias(nomeArq)
-# distancias, qtdCidades = funcoes.lerDados(nomeArq)
+if var == 1:
+    nomeArq = input('Digite o nome do arquivo para base de dados:')
+    distancias, qtdCidades = funcoes.calcularDistancias(nomeArq)
+
+if var == 2:
+    nomeArq = input('Digite o nome do arquivo para base de dados:')
+    distancias, qtdCidades = funcoes.lerDados(nomeArq)
+
+if var == 0:
+    exit(1)
+
 rota = []
 fo = 0
 
@@ -20,7 +33,7 @@ while True:
     print("                2. Descida \n")
     print("                3. Descida randomica \n")
     print("                4. Descida com Primeiro de Melhora \n")
-    print("                5. VND \n")
+    print("                5. VNS \n")
     print("                6. GRASP \n")
     print("                0. Sair \n")
     var = int(input("                Escolha: "))
@@ -106,7 +119,7 @@ while True:
 
     elif var == 5:
         inicio = timeit.default_timer()
-        rota_refinada, fo_refinada = funcoes.vnd(distancias, 5, rota, fo)
+        rota_refinada, fo_refinada = funcoes.vns(distancias, 5, rota, fo)
         fim = timeit.default_timer()
         print()
         print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)

@@ -335,9 +335,9 @@ def descidaPrimeiraMelhora(matriz, no, soma2):
                 somanova = somanova + matriz[no[i]][no[i + 1]]
 
             if (somanova < soma2):
-                print(no)
+                # print(no)
                 soma2 = somanova
-                print(somanova)
+                # print(somanova)
                 j = 2
                 k = 0
                 break
@@ -418,7 +418,7 @@ def shake(s, num_de_trocas):
     return s
 
 
-def vnd(distancias, num_estruturas, solucao_inicial, fo):
+def vns(distancias, num_estruturas, solucao_inicial, fo):
 
     solucao_corrente = solucao_inicial
     fo_corrente = fo
@@ -446,8 +446,8 @@ def grasp(distancias, qtd_cidades, cidadeInicial, alpha):
     melhor_rota = []
     while criterio_de_parada != 0:
         rota, fo = vizinhoMaisProximo(distancias, qtd_cidades, cidadeInicial, alpha)
-        rota, fo = descida(distancias, rota, qtd_cidades, fo)
-
+        # rota, fo = descida(distancias, rota, qtd_cidades, fo)
+        rota, fo = descidaPrimeiraMelhora(distancias, rota, fo)
         if fo < melhor_fo:
             melhor_fo = fo
             melhor_rota = rota
