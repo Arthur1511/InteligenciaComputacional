@@ -35,6 +35,7 @@ while True:
     print("                4. Descida com Primeiro de Melhora \n")
     print("                5. VNS \n")
     print("                6. GRASP \n")
+    print("                7. VND \n")
     print("                0. Sair \n")
     var = int(input("                Escolha: "))
 
@@ -61,6 +62,7 @@ while True:
 
         elif opcaoMenu == 2:
             print()
+            print("Parcialmente gulosa (Vizinho mais proximo): \n")
             cidadeInicial = int(input("Insira a cidade inicial:"))
             alpha = float(input("Insira o valor de Alfa:"))
             inicio = timeit.default_timer()
@@ -71,6 +73,8 @@ while True:
             print("Tempo de execução(s):", fim - inicio)
 
         elif opcaoMenu == 3:
+            print()
+            print("Gulosa (Insercao Mais Barata:) \n")
             inicio = timeit.default_timer()
             rota, fo = funcoes.insercaoMaisBarata(distancias, qtdCidades)
             fim = timeit.default_timer()
@@ -79,9 +83,11 @@ while True:
             print("Tempo de execução(s):", fim - inicio)
 
         elif opcaoMenu == 4:
-            print("teste3")
+            print("Parcialmente gulosa (Insercao Mais Barata) \n")
 
         elif opcaoMenu == 5:
+            print()
+            print("Aleatoria \n")
             cidadeInicial = int(input("Insira a cidade inicial:"))
             inicio = timeit.default_timer()
             rota, fo = funcoes.aleatorio(distancias, qtdCidades, cidadeInicial)
@@ -93,6 +99,8 @@ while True:
             continue
 
     elif var == 2:
+        print()
+        print("Descida: \n")
         inicio = timeit.default_timer()
         rota_refinada, fo_refinada = funcoes.descida(distancias, rota, qtdCidades, fo)
         fim = timeit.default_timer()
@@ -101,6 +109,7 @@ while True:
 
     elif var == 3:
         print()
+        print("Descida Randomica:")
         iterMax = int(input("Insira a quantidade maxima de iterações:"))
         inicio = timeit.default_timer()
         rota_refinada, fo_refinada = funcoes.descidaRandomica(distancias, qtdCidades, iterMax, rota, fo)
@@ -110,6 +119,8 @@ while True:
         print("Tempo de execução(s):", fim - inicio)
 
     elif var == 4:
+        print()
+        print("Descida Primeira de Melhora")
         inicio = timeit.default_timer()
         rota_refinada, fo_refinada = funcoes.descidaPrimeiraMelhora(distancias, rota, fo)
         fim = timeit.default_timer()
@@ -118,6 +129,8 @@ while True:
         print("Tempo de execução(s):", fim - inicio)
 
     elif var == 5:
+        print()
+        print("VNS:\n")
         inicio = timeit.default_timer()
         rota_refinada, fo_refinada = funcoes.vns(distancias, 5, rota, fo)
         fim = timeit.default_timer()
@@ -127,10 +140,21 @@ while True:
 
     elif var == 6:
         print()
+        print("GRASP:\n")
         cidadeInicial = int(input("Insira a cidade inicial:"))
         alpha = float(input("Insira o valor de Alfa:"))
         inicio = timeit.default_timer()
-        rota_refinada, fo_refinada = funcoes.grasp(distancias,qtdCidades, cidadeInicial, alpha)
+        rota_refinada, fo_refinada = funcoes.grasp(distancias, qtdCidades, cidadeInicial, alpha)
+        fim = timeit.default_timer()
+        print()
+        print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)
+        print("Tempo de execução(s):", fim - inicio)
+
+    elif var == 7:
+        print()
+        print("VND:\n")
+        inicio = timeit.default_timer()
+        rota_refinada, fo_refinada = funcoes.vnd(distancias, qtdCidades, rota, fo)
         fim = timeit.default_timer()
         print()
         print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)

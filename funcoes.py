@@ -3,9 +3,10 @@ import random
 import numpy
 import math
 
+
 def lerDados(arquivo):
     file = open(arquivo, 'r')
-    
+
     cidades = int(file.readline())
 
     file.readline()
@@ -44,7 +45,8 @@ def calcularDistancias(arquivo):
 
     for i in range(qtdCidades):
         for j in range(1, qtdCidades):
-            distancias[i][j] = float(numpy.sqrt(numpy.power(vet_x[i]-vet_x[j], 2) + numpy.power(vet_y[i]-vet_y[j], 2)))
+            distancias[i][j] = float(
+                numpy.sqrt(numpy.power(vet_x[i] - vet_x[j], 2) + numpy.power(vet_y[i] - vet_y[j], 2)))
             distancias[j][i] = distancias[i][j]
 
     file.close()
@@ -52,19 +54,19 @@ def calcularDistancias(arquivo):
 
 
 def buscaMenor(distancias, cidadeAtual, qtdCidades, cidadesVisitadas):
-
-    menorDistancia = 9999
+    menorDistancia = math.inf
     cidadeMaisProxima = -1
     for i in range(qtdCidades):
-        if(distancias[cidadeAtual][i] > 0 and distancias[cidadeAtual][i] < menorDistancia and i not in cidadesVisitadas):
+        if (distancias[cidadeAtual][i] > 0 and distancias[cidadeAtual][
+            i] < menorDistancia and i not in cidadesVisitadas):
             menorDistancia = distancias[cidadeAtual][i]
             cidadeMaisProxima = i
 
     return menorDistancia, cidadeMaisProxima
 
 
-def buscaParcial(distancias, cidadeAtual, qtdCidades, cidadesVisitadas,tamLCR):
-
+def buscaParcial(distancias, cidadeAtual, qtdCidades, cidadesVisitadas, tamLCR):
+    random.seed(10)
     ordenado = copy.copy(distancias[cidadeAtual])
 
     for visitado in cidadesVisitadas:
@@ -74,7 +76,7 @@ def buscaParcial(distancias, cidadeAtual, qtdCidades, cidadesVisitadas,tamLCR):
     menorDistancia = ordenado[random.randrange(tamLCR)]
 
     for i in range(qtdCidades):
-        if(distancias[cidadeAtual][i] == menorDistancia and i not in cidadesVisitadas):
+        if (distancias[cidadeAtual][i] == menorDistancia and i not in cidadesVisitadas):
             cidadeMaisProxima = i
 
     return menorDistancia, cidadeMaisProxima
@@ -93,7 +95,6 @@ def vizinhoMaisProximo(distancias, qtdCidades, cidadeInicial, alpha):
     cidadesVisitadas.append(cidadeAtual)
     cidadesNaoVisitadas.remove(cidadeAtual)
     while cidadesNaoVisitadas:
-
         tamLCR = round((1 + alpha * (len(cidadesNaoVisitadas) - 1)))
 
         menorDistancia, proximaCidade = buscaParcial(distancias, cidadeAtual, qtdCidades, cidadesVisitadas, tamLCR)
@@ -133,7 +134,6 @@ def vizinhoMaisProximo2(distancias, qtdCidades, cidadeInicial):
 
 
 def insercaoMaisBarata(matriz, tam):
-
     alpha = input("Digite o valor de alhpa:")
 
     tammatriz = ((tam - 2) * 3) - 1
@@ -262,25 +262,23 @@ def insercaoMaisBarata(matriz, tam):
 
     somanova = 0
 
-    for i in range(1,tamanho-1):
-        somanova += matriz[no[i]][no[i+1]]
+    for i in range(1, tamanho - 1):
+        somanova += matriz[no[i]][no[i + 1]]
 
     return no, somanova
 
 
 def calculaFo(distancias, rota):
-
     fo = 0
 
     for i in range(1, len(rota)):
-        fo += distancias[rota[i-1]][rota[i]]
+        fo += distancias[rota[i - 1]][rota[i]]
 
-    fo += distancias[rota[len(rota)-1]][rota[0]]
+    fo += distancias[rota[len(rota) - 1]][rota[0]]
     return fo
 
 
 def descida(distancias, rota_construida, qtd_cidades, fo):
-
     melhor_fo = fo
     melhor_rota = rota_construida
 
@@ -315,7 +313,6 @@ def descida(distancias, rota_construida, qtd_cidades, fo):
 
 
 def descidaPrimeiraMelhora(matriz, no, soma2):
-
     tamanho = len(no)
     k = 1
     j = 2
@@ -364,7 +361,6 @@ def aleatorio(distancias, qtdCidades, cidadeInicial):
     cidadesVisitadas.append(cidadeAtual)
     cidadesNaoVisitadas.remove(cidadeAtual)
     while cidadesNaoVisitadas:
-
         proximaCidade = random.choice(cidadesNaoVisitadas)
         adistancia = distancias[cidadeAtual][proximaCidade]
 
@@ -380,14 +376,14 @@ def aleatorio(distancias, qtdCidades, cidadeInicial):
     return cidadesVisitadas, fo
 
 
-def descidaRandomica(distancias, qtdCidades, iterMax, s, fo1): #descRandom(f(.), N(.), interMax, s)
+def descidaRandomica(distancias, qtdCidades, iterMax, s, fo1):  # descRandom(f(.), N(.), interMax, s)
 
-    #uma estrutura de vizinhança N(:), s = solucao
+    # uma estrutura de vizinhança N(:), s = solucao
     interacao = 0
-    while(interacao < iterMax):
+    while (interacao < iterMax):
 
-         # s' pertence N(s);
-        solucao1 = random.randrange(1,qtdCidades)
+        # s' pertence N(s);
+        solucao1 = random.randrange(1, qtdCidades)
         solucao2 = random.randrange(1, qtdCidades)
         interacao = interacao + 1
 
@@ -396,9 +392,9 @@ def descidaRandomica(distancias, qtdCidades, iterMax, s, fo1): #descRandom(f(.),
         rota_vizinha[solucao1] = rota_vizinha[solucao2]
         rota_vizinha[solucao2] = aux
 
-        fo =calculaFo(distancias, rota_vizinha)
+        fo = calculaFo(distancias, rota_vizinha)
 
-        if(fo < fo1): #f(s') < f(s)
+        if (fo < fo1):  # f(s') < f(s)
             interacao = 0
             s = rota_vizinha
             fo1 = fo
@@ -406,8 +402,109 @@ def descidaRandomica(distancias, qtdCidades, iterMax, s, fo1): #descRandom(f(.),
     return s, fo1
 
 
-def shake(s, num_de_trocas):
+def descidaRealocada(distancias, rota_construida, qtd_cidades, fo):
+    melhor_fo = fo
+    melhor_rota = rota_construida
 
+    melhor_fo_vizinho = melhor_fo
+    melhor_rota_vizinha = melhor_rota
+
+    while 1:
+
+        for i in range(1, qtd_cidades):
+            for j in range(2, qtd_cidades):
+                if i == j:
+                    continue
+                rota_vizinha = copy.copy(melhor_rota)
+                aux = rota_vizinha[i]
+                rota_vizinha.remove(aux)
+                rota_vizinha.insert(j, aux)
+
+                aux_fo = calculaFo(distancias, rota_vizinha)
+
+                if aux_fo < melhor_fo_vizinho:
+                    melhor_fo_vizinho = aux_fo
+                    melhor_rota_vizinha = rota_vizinha
+
+        if melhor_fo_vizinho < melhor_fo:
+            melhor_fo = melhor_fo_vizinho
+            melhor_rota = melhor_rota_vizinha
+
+        else:
+            break
+
+    return melhor_rota, melhor_fo
+
+
+def descidaBloco2(distancias, rota_construida, qtd_cidades, fo):
+    melhor_fo = fo
+    melhor_rota = rota_construida
+
+    melhor_fo_vizinho = melhor_fo
+    melhor_rota_vizinha = melhor_rota
+
+    while 1:
+
+        for i in range(1, qtd_cidades - 3):
+            for j in range(i + 2, qtd_cidades - 1):
+                if i == j:
+                    continue
+                rota_vizinha = copy.copy(melhor_rota)
+                aux1, aux2 = rota_vizinha[i], rota_vizinha[i + 1]
+                rota_vizinha[i], rota_vizinha[i + 1] = rota_vizinha[j], rota_vizinha[j + 1]
+                rota_vizinha[j], rota_vizinha[j + 1] = aux1, aux2
+
+                aux_fo = calculaFo(distancias, rota_vizinha)
+
+                if aux_fo < melhor_fo_vizinho:
+                    melhor_fo_vizinho = aux_fo
+                    melhor_rota_vizinha = rota_vizinha
+
+        if melhor_fo_vizinho < melhor_fo:
+            melhor_fo = melhor_fo_vizinho
+            melhor_rota = melhor_rota_vizinha
+
+        else:
+            break
+
+    return melhor_rota, melhor_fo
+
+
+def descidaBloco3(distancias, rota_construida, qtd_cidades, fo):
+    melhor_fo = fo
+    melhor_rota = rota_construida
+
+    melhor_fo_vizinho = melhor_fo
+    melhor_rota_vizinha = melhor_rota
+
+    while 1:
+
+        for i in range(1, qtd_cidades - 6):
+            for j in range(i + 3, qtd_cidades - 1):
+                if i == j:
+                    continue
+                rota_vizinha = copy.copy(melhor_rota)
+                aux1, aux2 = rota_vizinha[i], rota_vizinha[i + 1]
+                rota_vizinha[i], rota_vizinha[i + 1] = rota_vizinha[j], rota_vizinha[j + 1]
+                rota_vizinha[j], rota_vizinha[j + 1] = aux1, aux2
+
+                aux_fo = calculaFo(distancias, rota_vizinha)
+
+                if aux_fo < melhor_fo_vizinho:
+                    melhor_fo_vizinho = aux_fo
+                    melhor_rota_vizinha = rota_vizinha
+
+        if melhor_fo_vizinho < melhor_fo:
+            melhor_fo = melhor_fo_vizinho
+            melhor_rota = melhor_rota_vizinha
+
+        else:
+            break
+
+    return melhor_rota, melhor_fo
+
+
+def shake(s, num_de_trocas):
     for i in range(num_de_trocas):
         troca1 = random.randrange(1, len(s))
         troca2 = random.randrange(1, len(s))
@@ -418,8 +515,38 @@ def shake(s, num_de_trocas):
     return s
 
 
-def vns(distancias, num_estruturas, solucao_inicial, fo):
+def vnd(distancias, qtd_cidades, solucao_inicial, fo):
 
+    solucao_corrente = solucao_inicial
+    fo_corrente = fo
+
+    grau_estrutura = 0
+    solucao_vizinha, fo_vizinho = [], 0
+    while grau_estrutura < 4:
+
+        if grau_estrutura == 0:
+            solucao_vizinha, fo_vizinho = descida(distancias, solucao_vizinha, qtd_cidades, fo)
+
+        if grau_estrutura == 1:
+            solucao_vizinha, fo_vizinho = descidaRealocada(distancias, solucao_vizinha, qtd_cidades, fo)
+
+        if grau_estrutura == 2:
+            solucao_vizinha, fo_vizinho = descidaBloco2(distancias, solucao_vizinha, qtd_cidades, fo)
+
+        if grau_estrutura == 3:
+            solucao_vizinha, fo_vizinho = descidaBloco2(distancias, solucao_vizinha, qtd_cidades, fo)
+
+        if fo_vizinho < fo_corrente:
+            solucao_corrente = solucao_vizinha
+            fo_vizinho = fo_vizinho
+            grau_estrutura = 1
+        else:
+            grau_estrutura += 1
+
+    return solucao_vizinha, fo_vizinho
+
+
+def vns(distancias, num_estruturas, solucao_inicial, fo):
     solucao_corrente = solucao_inicial
     fo_corrente = fo
 
@@ -440,8 +567,8 @@ def vns(distancias, num_estruturas, solucao_inicial, fo):
 
 
 def grasp(distancias, qtd_cidades, cidadeInicial, alpha):
-
-    criterio_de_parada = 10*qtd_cidades
+    random.seed(1100)
+    criterio_de_parada = 10 * qtd_cidades
     melhor_fo = math.inf
     melhor_rota = []
     while criterio_de_parada != 0:
