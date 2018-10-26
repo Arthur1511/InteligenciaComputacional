@@ -36,9 +36,12 @@ while True:
     print("                5. VNS \n")
     print("                6. GRASP \n")
     print("                7. VND \n")
+    print("                8. Simulated Annealing \n")
     print("                0. Sair \n")
     var = int(input("                Escolha: "))
 
+    if var == 0:
+        exit(1)
     if var == 1:
         print("\n************Geracao da Solucao Inicial**************** \n")
         print("                1. Gulosa (Vizinho mais proximo) \n")
@@ -143,8 +146,9 @@ while True:
         print("GRASP:\n")
         cidadeInicial = int(input("Insira a cidade inicial:"))
         alpha = float(input("Insira o valor de Alfa:"))
+        seed = int(input("Insira o valor da semente:"))
         inicio = timeit.default_timer()
-        rota_refinada, fo_refinada = funcoes.grasp(distancias, qtdCidades, cidadeInicial, alpha)
+        rota_refinada, fo_refinada = funcoes.grasp(distancias, qtdCidades, cidadeInicial, alpha, seed)
         fim = timeit.default_timer()
         print()
         print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)
@@ -159,6 +163,20 @@ while True:
         print()
         print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)
         print("Tempo de execução(s):", fim - inicio)
-    else:
-        break
 
+    elif var == 8:
+        print()
+        print("Simulated Annealing:\n")
+        print("Calculando temperatura...")
+        temperatura = round(funcoes.temperatura_inicial(distancias, 1.2, 0.95, 200 * qtdCidades, 100, rota))
+        print("Temperatura inicial =", temperatura)
+        inicio = timeit.default_timer()
+        rota_refinada = funcoes.simulated_annealing(distancias, 0.8, 200 * qtdCidades, temperatura, rota)
+        fim = timeit.default_timer()
+        print()
+        print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", funcoes.calculaFo(distancias, rota_refinada))
+        print("Tempo de execução(s):", fim - inicio)
+
+    else:
+        print("OPÇAO INVALIDA!!")
+        continue

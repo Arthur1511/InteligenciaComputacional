@@ -57,8 +57,7 @@ def buscaMenor(distancias, cidadeAtual, qtdCidades, cidadesVisitadas):
     menorDistancia = math.inf
     cidadeMaisProxima = -1
     for i in range(qtdCidades):
-        if (distancias[cidadeAtual][i] > 0 and distancias[cidadeAtual][
-            i] < menorDistancia and i not in cidadesVisitadas):
+        if cidadeAtual != i and distancias[cidadeAtual][i] < menorDistancia and i not in cidadesVisitadas:
             menorDistancia = distancias[cidadeAtual][i]
             cidadeMaisProxima = i
 
@@ -66,7 +65,7 @@ def buscaMenor(distancias, cidadeAtual, qtdCidades, cidadesVisitadas):
 
 
 def buscaParcial(distancias, cidadeAtual, qtdCidades, cidadesVisitadas, tamLCR):
-    random.seed(10)
+
     ordenado = copy.copy(distancias[cidadeAtual])
 
     for visitado in cidadesVisitadas:
@@ -76,7 +75,7 @@ def buscaParcial(distancias, cidadeAtual, qtdCidades, cidadesVisitadas, tamLCR):
     menorDistancia = ordenado[random.randrange(tamLCR)]
 
     for i in range(qtdCidades):
-        if (distancias[cidadeAtual][i] == menorDistancia and i not in cidadesVisitadas):
+        if distancias[cidadeAtual][i] == menorDistancia and i not in cidadesVisitadas:
             cidadeMaisProxima = i
 
     return menorDistancia, cidadeMaisProxima
@@ -120,12 +119,17 @@ def vizinhoMaisProximo2(distancias, qtdCidades, cidadeInicial):
 
     cidadeAtual = cidadeInicial
 
+    cidadesVisitadas.append(cidadeAtual)
+    cidadesNaoVisitadas.remove(cidadeAtual)
+
     while cidadesNaoVisitadas:
-        cidadesVisitadas.append(cidadeAtual)
-        cidadesNaoVisitadas.remove(cidadeAtual)
+
         menorDistancia, proximaCidade = buscaMenor(distancias, cidadeAtual, qtdCidades, cidadesVisitadas)
         fo += menorDistancia
         cidadeAtual = proximaCidade
+
+        cidadesVisitadas.append(cidadeAtual)
+        cidadesNaoVisitadas.remove(cidadeAtual)
 
     fo += distancias[cidadesVisitadas[qtdCidades - 1]][cidadeInicial]
     cidadesVisitadas.append(cidadeInicial)
@@ -276,6 +280,7 @@ def calculaFo(distancias, rota):
 
     fo += distancias[rota[len(rota) - 1]][rota[0]]
     return fo
+
 
 
 def descida(distancias, rota_construida, qtd_cidades, fo):
@@ -506,8 +511,8 @@ def descidaBloco3(distancias, rota_construida, qtd_cidades, fo):
 
 def shake(s, num_de_trocas):
     for i in range(num_de_trocas):
-        troca1 = random.randrange(1, len(s))
-        troca2 = random.randrange(1, len(s))
+        troca1 = random.randrange(1, len(s) - 1)
+        troca2 = random.randrange(1, len(s) - 1)
         aux = s[troca1]
         s[troca1] = s[troca2]
         s[troca2] = aux
@@ -521,25 +526,25 @@ def vnd(distancias, qtd_cidades, solucao_inicial, fo):
     fo_corrente = fo
 
     grau_estrutura = 0
-    solucao_vizinha, fo_vizinho = [], 0
-    while grau_estrutura < 4:
 
+    while grau_estrutura < 4:
+        print(grau_estrutura)
         if grau_estrutura == 0:
-            solucao_vizinha, fo_vizinho = descida(distancias, solucao_vizinha, qtd_cidades, fo)
+            solucao_vizinha, fo_vizinho = descida(distancias, solucao_corrente, qtd_cidades, fo)
 
         if grau_estrutura == 1:
-            solucao_vizinha, fo_vizinho = descidaRealocada(distancias, solucao_vizinha, qtd_cidades, fo)
+            solucao_vizinha, fo_vizinho = descidaRealocada(distancias, solucao_corrente, qtd_cidades, fo)
 
         if grau_estrutura == 2:
-            solucao_vizinha, fo_vizinho = descidaBloco2(distancias, solucao_vizinha, qtd_cidades, fo)
+            solucao_vizinha, fo_vizinho = descidaBloco2(distancias, solucao_corrente, qtd_cidades, fo)
 
         if grau_estrutura == 3:
-            solucao_vizinha, fo_vizinho = descidaBloco2(distancias, solucao_vizinha, qtd_cidades, fo)
+            solucao_vizinha, fo_vizinho = descidaBloco3(distancias, solucao_corrente, qtd_cidades, fo)
 
         if fo_vizinho < fo_corrente:
             solucao_corrente = solucao_vizinha
-            fo_vizinho = fo_vizinho
-            grau_estrutura = 1
+            fo_corrente = fo_vizinho
+            grau_estrutura = 0
         else:
             grau_estrutura += 1
 
@@ -566,18 +571,76 @@ def vns(distancias, num_estruturas, solucao_inicial, fo):
     return solucao_corrente, fo_corrente
 
 
-def grasp(distancias, qtd_cidades, cidadeInicial, alpha):
-    random.seed(1100)
+def grasp(distancias, qtd_cidades, cidadeInicial, alpha, seed):
+    random.seed(seed)
     criterio_de_parada = 10 * qtd_cidades
     melhor_fo = math.inf
     melhor_rota = []
     while criterio_de_parada != 0:
         rota, fo = vizinhoMaisProximo(distancias, qtd_cidades, cidadeInicial, alpha)
-        # rota, fo = descida(distancias, rota, qtd_cidades, fo)
-        rota, fo = descidaPrimeiraMelhora(distancias, rota, fo)
+        rota, fo = descida(distancias, rota, qtd_cidades, fo)
+        print(fo)
+        # rota, fo = descidaPrimeiraMelhora(distancias, rota, fo)
         if fo < melhor_fo:
             melhor_fo = fo
             melhor_rota = rota
         criterio_de_parada -= 1
 
     return rota, fo
+
+
+def simulated_annealing(distancias, alfa, sa_max, temperatura_ini, rota):
+    solucao_corrente = rota
+    iter_t = 0
+    temperatura = temperatura_ini
+
+    while temperatura > 0.0001:
+        while iter_t < sa_max:
+
+            iter_t += 1
+            vizinho = shake(copy.copy(rota), 1)
+            delta = calculaFo(distancias, vizinho) - calculaFo(distancias, rota)
+
+            if delta < 0:
+                rota = vizinho
+
+                if calculaFo(distancias, vizinho) < calculaFo(distancias, solucao_corrente):
+                    solucao_corrente = vizinho
+            else:
+                x = random.random()
+                if x < math.pow(math.e, (-delta / temperatura)):
+                    rota = vizinho
+
+        temperatura *= alfa
+        iter_t = 0
+
+    rota = solucao_corrente
+
+    return rota
+
+
+def temperatura_inicial(distancias, beta, gama, sa_max, temperatura_ini, solucao_ini):
+    continua = True
+    temperatura = temperatura_ini
+
+    while continua:
+        aceitos = 0
+        for iter_t in range(1, sa_max):
+            vizinho = shake(copy.copy(solucao_ini), 1)
+            delta = calculaFo(distancias, vizinho) - calculaFo(distancias, solucao_ini)
+
+            if delta < 0:
+                aceitos += 1
+
+            else:
+                x = random.random()
+                if x < math.pow(math.e, (-delta / temperatura)):
+                    aceitos += 1
+
+        if aceitos >= gama * sa_max:
+            continua = False
+
+        else:
+            temperatura *= beta
+
+    return temperatura
