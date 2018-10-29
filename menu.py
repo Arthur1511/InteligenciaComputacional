@@ -37,6 +37,7 @@ while True:
     print("                6. GRASP \n")
     print("                7. VND \n")
     print("                8. Simulated Annealing \n")
+    print("                9. Busca Tabu \n")
     print("                0. Sair \n")
     var = int(input("                Escolha: "))
 
@@ -175,6 +176,16 @@ while True:
         fim = timeit.default_timer()
         print()
         print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", funcoes.calculaFo(distancias, rota_refinada))
+        print("Tempo de execução(s):", fim - inicio)
+
+    elif var == 9:
+        print()
+        print("Busca Tabu:\n")
+        inicio = timeit.default_timer()
+        rota_refinada, fo_refinada = funcoes.busca_tabu(distancias, qtdCidades, rota, 3, 3)
+        fim = timeit.default_timer()
+        print()
+        print("Rota Refinada ->", rota_refinada, "\n", "FO Refinado=", fo_refinada)
         print("Tempo de execução(s):", fim - inicio)
 
     else:

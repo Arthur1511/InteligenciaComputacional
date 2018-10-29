@@ -282,7 +282,6 @@ def calculaFo(distancias, rota):
     return fo
 
 
-
 def descida(distancias, rota_construida, qtd_cidades, fo):
     melhor_fo = fo
     melhor_rota = rota_construida
@@ -644,3 +643,50 @@ def temperatura_inicial(distancias, beta, gama, sa_max, temperatura_ini, solucao
             temperatura *= beta
 
     return temperatura
+
+
+def busca_tabu(distancias, qtd_cidades, rota_ini, bt_max, tabu_tam):
+    melhor_rota = rota_ini
+    melhor_fo = calculaFo(distancias, melhor_rota)
+    rota_corrente = melhor_rota
+    fo_corrente = melhor_fo
+    iter_count = 0
+    melhor_iter = 0
+    tabu = []
+
+    while iter_count - melhor_iter <= bt_max:
+        troca = []
+        melhor_fo_vizinho = fo_corrente
+        melhor_rota_vizinha = rota_corrente
+
+        for i in range(1, qtd_cidades):
+            for j in range(2, qtd_cidades):
+                if i == j:
+                    continue
+                rota_vizinha = copy.copy(rota_corrente)
+                aux = rota_vizinha[i]
+                rota_vizinha[i] = rota_vizinha[j]
+                rota_vizinha[j] = aux
+
+                aux_fo = calculaFo(distancias, rota_vizinha)
+
+                if aux_fo < melhor_fo_vizinho:
+                    melhor_fo_vizinho = aux_fo
+                    melhor_rota_vizinha = rota_vizinha
+                    troca = [j, i]
+
+        if troca not in tabu or melhor_fo_vizinho < fo_corrente:
+            if len(tabu) == tabu_tam:
+                tabu.pop()
+            tabu.append(troca)
+            fo_corrente = melhor_fo_vizinho
+            rota_corrente = melhor_rota_vizinha
+
+        if fo_corrente < melhor_fo:
+            melhor_fo = fo_corrente
+            melhor_rota = rota_corrente
+            melhor_iter = iter_count
+
+        iter_count += 1
+
+    return melhor_rota, melhor_fo
